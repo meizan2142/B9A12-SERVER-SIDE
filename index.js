@@ -6,7 +6,7 @@ const app = express()
 require('dotenv').config()
 
 const corsOptions = {
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://supermacy-assignment.web.app'],
     credentials: true,
     optionSuccessStatus: 200
 }
@@ -29,6 +29,30 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
+        // collection
+        const userCollection = client.db('supermacy').collection('newUser')
+        const topEarnersCollection = client.db('supermacy').collection('topEarners')
+        // get data of users who are registered
+        app.get('/newuser', async (req, res) => {
+            const result = await userCollection.find().toArray()
+            res.send(result)
+        })
+        // show topEarner data on backend
+        app.get('/topearners', async (req, res) => {
+            const result = await topEarnersCollection.find().toArray()
+            res.send(result)
+        })
+        // post data from client side(client side Registration)
+        app.post('/newuser', async (req, res) => {
+            const newUsers = req.body;
+            const query  = {email: newUsers.email}
+            const existingUser = await userCollection.findOne(query)
+            if (existingUser) {
+                return res.send({message: 'User Already exists', insertedId: null})
+            }
+            const result = await userCollection.insertOne(newUsers);
+            res.send(result)
+        });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally { }
 }
@@ -37,7 +61,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Saif and Sabrina dfjddffdsdjfl FJDSFJJFDSJF')
+    res.send('If you smell, what the Rock is Cooking')
 })
 
 app.listen(port, () => {
