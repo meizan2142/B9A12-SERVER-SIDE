@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const port = process.env.PORT || 5000
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 require('dotenv').config()
 
@@ -37,6 +37,25 @@ async function run() {
             const result = await userCollection.find().toArray()
             res.send(result)
         })
+        app.get('/newuser/:email', async (req, res) => {
+            const email = req.params.email
+            const result = await userCollection.findOne({email})
+            res.send(result)
+        })
+
+        //  Update user role
+        // app.put('newUser/:email', async (req, res) => {
+        //     const query = {email: new ObjectId(req.params.email)}
+        //     const data = {
+        //         $set: {
+        //             role: req.body.role
+        //         }
+        //     }
+        //     const result = await userCollection.updateOne(query, data)
+        //     res.send(result)
+        // })
+
+
         // show topEarner data on backend
         app.get('/topearners', async (req, res) => {
             const result = await topEarnersCollection.find().toArray()
