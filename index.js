@@ -43,18 +43,6 @@ async function run() {
             res.send(result)
         })
 
-        //  Update user role
-        // app.put('newUser/:email', async (req, res) => {
-        //     const query = {email: new ObjectId(req.params.email)}
-        //     const data = {
-        //         $set: {
-        //             role: req.body.role
-        //         }
-        //     }
-        //     const result = await userCollection.updateOne(query, data)
-        //     res.send(result)
-        // })
-
 
         // show topEarner data on backend
         app.get('/topearners', async (req, res) => {
