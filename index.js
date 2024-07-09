@@ -32,6 +32,7 @@ async function run() {
         // collection
         const userCollection = client.db('supermacy').collection('newUser')
         const topEarnersCollection = client.db('supermacy').collection('topEarners')
+        const taskCollection = client.db('supermacy').collection('tasks')
         // get data of users who are registered
         app.get('/newuser', async (req, res) => {
             const result = await userCollection.find().toArray()
@@ -58,6 +59,19 @@ async function run() {
                 return res.send({message: 'User Already exists', insertedId: null})
             }
             const result = await userCollection.insertOne(newUsers);
+            res.send(result)
+        });
+        // Task collection
+        app.get('/addedtasks', async(req, res) => {
+            const result = await taskCollection.find().toArray()
+            res.send(result)
+        })
+        // Storing all added task on mongodb
+        app.post('/addedtasks', async (req, res) => {
+            const allTasks = req.body;
+            console.log(allTasks);
+            const result = await taskCollection.insertOne(allTasks);
+            console.log(result);
             res.send(result)
         });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
