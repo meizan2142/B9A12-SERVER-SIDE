@@ -33,6 +33,7 @@ async function run() {
         const userCollection = client.db('supermacy').collection('newUser')
         const topEarnersCollection = client.db('supermacy').collection('topEarners')
         const taskCollection = client.db('supermacy').collection('tasks')
+        const paymentInfoCollection = client.db('supermacy').collection('paymentInfo')
         // get data of users who are registered
         app.get('/newuser', async (req, res) => {
             const result = await userCollection.find().toArray()
@@ -40,29 +41,32 @@ async function run() {
         })
         app.get('/newuser/:email', async (req, res) => {
             const email = req.params.email
-            const result = await userCollection.findOne({email})
-            res.send(result)
-        })
-
-
-        // show topEarner data on backend
-        app.get('/topearners', async (req, res) => {
-            const result = await topEarnersCollection.find().toArray()
+            const result = await userCollection.findOne({ email })
             res.send(result)
         })
         // post data from client side(client side Registration)
         app.post('/newuser', async (req, res) => {
             const newUsers = req.body;
-            const query  = {email: newUsers.email}
+            const query = { email: newUsers.email }
             const existingUser = await userCollection.findOne(query)
             if (existingUser) {
-                return res.send({message: 'User Already exists', insertedId: null})
+                return res.send({ message: 'User Already exists', insertedId: null })
             }
             const result = await userCollection.insertOne(newUsers);
             res.send(result)
         });
+        // show topEarner data on backend
+        app.get('/topearners', async (req, res) => {
+            const result = await topEarnersCollection.find().toArray()
+            res.send(result)
+        })
+        // Payment Info
+        app.get('/paymentinfo', async (req, res) => {
+            const result = await paymentInfoCollection.find().toArray()
+            res.send(result)
+        })
         // Task collection
-        app.get('/addedtasks', async(req, res) => {
+        app.get('/addedtasks', async (req, res) => {
             const result = await taskCollection.find().toArray()
             res.send(result)
         })
