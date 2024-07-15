@@ -34,6 +34,7 @@ async function run() {
         const topEarnersCollection = client.db('supermacy').collection('topEarners')
         const taskCollection = client.db('supermacy').collection('tasks')
         const paymentInfoCollection = client.db('supermacy').collection('paymentInfo')
+        const submissionsCollection = client.db('supermacy').collection('submissions')
         // get data of users who are registered
         app.get('/newuser', async (req, res) => {
             const result = await userCollection.find().toArray()
@@ -76,6 +77,24 @@ async function run() {
             console.log(allTasks);
             const result = await taskCollection.insertOne(allTasks);
             console.log(result);
+            res.send(result)
+        });
+
+        app.get('/addedtasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await taskCollection.findOne(query)
+            res.send(result)
+        })
+
+        // Sumission Collection
+        app.get('/submissions', async (req, res) => {
+            const result = await submissionsCollection.find().toArray()
+            res.send(result)
+        })
+        app.post('/submissions', async (req, res) => {
+            const allSubmissions = req.body;
+            const result = await submissionsCollection.insertOne(allSubmissions);
             res.send(result)
         });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
