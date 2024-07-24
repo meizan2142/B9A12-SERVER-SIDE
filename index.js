@@ -74,9 +74,7 @@ async function run() {
         // Storing all added task on mongodb
         app.post('/addedtasks', async (req, res) => {
             const allTasks = req.body;
-            console.log(allTasks);
             const result = await taskCollection.insertOne(allTasks);
-            console.log(result);
             res.send(result)
         });
 
