@@ -96,13 +96,6 @@ async function run() {
             const result = await submissionsCollection.insertOne(allSubmissions);
             res.send(result)
         });
-        // app.get('/submissions/:email', async (req, res) => {
-        //     const email = req.params.email
-        //     const result = await submissionsCollection.findOne({ email })
-        //     res.send(result)
-        // })
-
-
         // WithDraws route
         app.get('/withdraws', async (req, res) => {
             const result = await withdrawCollection.find().toArray()
