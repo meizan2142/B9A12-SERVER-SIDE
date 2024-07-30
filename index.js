@@ -86,6 +86,33 @@ async function run() {
             res.send(result)
         })
 
+        // update single Task
+        app.put('/addedtasks/:id', async (req, res) => {
+            console.log(req.params.id)
+            const query = { _id: new ObjectId(req.params.id) }
+            const data = {
+                $set: {
+                    title: req.body.title,
+                    detail: req.body.detail,
+                    amount: req.body.amount,
+                    info: req.body.info,
+                    quantity: req.body.quantity,
+                    date: req.body.date
+                }
+            }
+            const result = await taskCollection.updateOne(query, data)
+            console.log(result);
+            res.send(result)
+        })
+
+        // Delete a Single Task
+        app.delete('/addedtasks/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)}
+            const result = await taskCollection.deleteOne(query)
+            res.send(result)
+        })  
+
         // Sumission Collection
         app.get('/submissions', async (req, res) => {
             const result = await submissionsCollection.find().toArray()
