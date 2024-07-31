@@ -67,6 +67,12 @@ async function run() {
             const result = await paymentInfoCollection.find().toArray()
             res.send(result)
         })
+        app.get('/paymentinfo/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await paymentInfoCollection.findOne(query)
+            res.send(result)
+        })
         // Task collection
         app.get('/addedtasks', async (req, res) => {
             const result = await taskCollection.find().toArray()
@@ -106,12 +112,12 @@ async function run() {
         })
 
         // Delete a Single Task
-        app.delete('/addedtasks/:id', async(req, res) => {
+        app.delete('/addedtasks/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await taskCollection.deleteOne(query)
             res.send(result)
-        })  
+        })
 
         // Sumission Collection
         app.get('/submissions', async (req, res) => {
