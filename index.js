@@ -46,6 +46,27 @@ async function run() {
             const result = await userCollection.findOne({ email })
             res.send(result)
         })
+        // update a single user role
+        app.put('/newuser/:email', async (req, res) => {
+            console.log(req.params.email)
+            const user = req.body;
+            const query = { email }
+            const updateRole = {
+                $set: {
+                    role: req.body.role
+                }
+            }
+            const result = await userCollection.updateOne(query, updateRole)
+            console.log(result);
+            res.send(result)
+        })
+        // Delete a Single Task
+        app.delete('/newuser/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: (email) }
+            const result = await userCollection.deleteOne(query)
+            res.send(result)
+        })
         // post data from client side(client side Registration)
         app.post('/newuser', async (req, res) => {
             const newUsers = req.body;
@@ -100,10 +121,7 @@ async function run() {
                 $set: {
                     title: req.body.title,
                     detail: req.body.detail,
-                    amount: req.body.amount,
-                    info: req.body.info,
-                    quantity: req.body.quantity,
-                    date: req.body.date
+                    quantity: req.body.quantity
                 }
             }
             const result = await taskCollection.updateOne(query, data)
@@ -122,6 +140,12 @@ async function run() {
         // Sumission Collection
         app.get('/submissions', async (req, res) => {
             const result = await submissionsCollection.find().toArray()
+            res.send(result)
+        })
+        app.get('/submissions/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await submissionsCollection.findOne(query)
             res.send(result)
         })
         app.post('/submissions', async (req, res) => {
