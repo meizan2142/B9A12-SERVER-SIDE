@@ -61,7 +61,7 @@ async function run() {
             const updateRole = {
                 $set: {
                     role: user.selectedPerson.role,
-                    coins: user.newCoin
+                    coins: user.userCoins
                 },
             };
             const result = await userCollection.updateOne(query, updateRole)
