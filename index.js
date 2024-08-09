@@ -46,24 +46,31 @@ async function run() {
             const result = await userCollection.findOne({ email })
             res.send(result)
         })
+        app.get('/newuser/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await userCollection.findOne(query)
+            res.send(result)
+        })
         // update a single user role
         app.put('/newuser/:email', async (req, res) => {
-            console.log(req.params.email)
+            const email = req.params.email;
             const user = req.body;
-            const query = { email }
+            const query = { email };
+            console.log(user, query);
             const updateRole = {
                 $set: {
-                    role: req.body.role
-                }
-            }
+                    role: user.selectedPerson.role,
+                    coins: user.newCoin
+                },
+            };
             const result = await userCollection.updateOne(query, updateRole)
-            console.log(result);
-            res.send(result)
+            res.send(result);
         })
         // Delete a Single Task
         app.delete('/newuser/:email', async (req, res) => {
             const email = req.params.email;
-            const query = { email: (email) }
+            const query = { email: email }
             const result = await userCollection.deleteOne(query)
             res.send(result)
         })
