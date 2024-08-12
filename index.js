@@ -160,9 +160,30 @@ async function run() {
             const result = await submissionsCollection.insertOne(allSubmissions);
             res.send(result)
         });
+        // update a single submission's status
+        app.put('/submissions/:id', async (req, res) => {
+            const id = req.params.id;
+            const user = req.body;
+            console.log(id, user);
+            const query = { _id: new ObjectId(req.params.id) }
+            const data = {
+                $set: {
+                    status: req.body.status
+                }
+            }
+            const result = await submissionsCollection.updateOne(query, data)
+            console.log(result);
+            res.send(result)
+        })
         // WithDraws route
         app.get('/withdraws', async (req, res) => {
             const result = await withdrawCollection.find().toArray()
+            res.send(result)
+        })
+        app.get('/withdraws/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await withdrawCollection.findOne(query)
             res.send(result)
         })
         app.post('/withdraws', async (req, res) => {
