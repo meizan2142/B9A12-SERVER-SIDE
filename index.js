@@ -67,10 +67,38 @@ async function run() {
             const result = await userCollection.updateOne(query, updateRole)
             res.send(result);
         })
+        app.patch('/newuser/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = req.body;
+            const query = { email };
+            console.log(user, query);
+            const updateCoins = {
+                $set: {
+                    coins: user.reduced
+                },
+            };
+            const result = await userCollection.updateOne(query, updateCoins)
+            res.send(result);
+        })
+        // app.patch('/newuser/:email', async (req, res) => {
+        //     const email = req.params.email;
+        //     const user = req.body;
+        //     const query = { email };
+        //     console.log(user, query);
+        //     const updateCoins = {
+        //         $set: {
+        //             coins: user.increased
+        //         },
+        //     };
+        //     console.log(updateCoins);
+        //     const result = await userCollection.updateOne(query, updateCoins)
+        //     res.send(result);
+        // })
         // Delete a Single Task
         app.delete('/newuser/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email }
+            console.log(query);
             const result = await userCollection.deleteOne(query)
             res.send(result)
         })
@@ -140,6 +168,7 @@ async function run() {
         app.delete('/addedtasks/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
+            console.log(query);
             const result = await taskCollection.deleteOne(query)
             res.send(result)
         })
@@ -191,12 +220,18 @@ async function run() {
             const result = await withdrawCollection.insertOne(allSubmissions);
             res.send(result)
         });
+        // Delete a Single Withdraw
+        app.delete('/withdraws/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            console.log(query);
+            const result = await withdrawCollection.deleteOne(query)
+            res.send(result)
+        })
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally { }
 }
 run().catch(console.dir);
-
-
 
 app.get('/', (req, res) => {
     res.send('If you smell, what the Rock is Cooking')
