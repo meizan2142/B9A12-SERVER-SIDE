@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const port = process.env.PORT || 5000
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
@@ -72,28 +73,14 @@ async function run() {
             const user = req.body;
             const query = { email };
             console.log(user, query);
-            const updateCoins = {
+            const updateCoins1 = {
                 $set: {
                     coins: user.reduced
                 },
             };
-            const result = await userCollection.updateOne(query, updateCoins)
-            res.send(result);
+            const result1 = await userCollection.updateOne(query, updateCoins1)
+            res.send(result1);
         })
-        // app.patch('/newuser/:email', async (req, res) => {
-        //     const email = req.params.email;
-        //     const user = req.body;
-        //     const query = { email };
-        //     console.log(user, query);
-        //     const updateCoins = {
-        //         $set: {
-        //             coins: user.increased
-        //         },
-        //     };
-        //     console.log(updateCoins);
-        //     const result = await userCollection.updateOne(query, updateCoins)
-        //     res.send(result);
-        // })
         // Delete a Single Task
         app.delete('/newuser/:email', async (req, res) => {
             const email = req.params.email;
@@ -174,9 +161,18 @@ async function run() {
         })
 
         // Sumission Collection
-        app.get('/submissions', async (req, res) => {
+        app.get('/submissions', async (req, res) => { 
+            const page = parseInt(req.query.page)
+            const size = parseInt(req.query.size)
+            console.log(page, size, req.query);
+            // .skip(page * size).limit(size)
+
             const result = await submissionsCollection.find().toArray()
             res.send(result)
+        })
+        app.get('/submissionsCount', async (req, res) => {
+            const count = await submissionsCollection.estimatedDocumentCount()
+            res.send({ count })
         })
         app.get('/submissions/:id', async (req, res) => {
             const id = req.params.id;
